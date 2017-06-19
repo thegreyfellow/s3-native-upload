@@ -1,0 +1,14 @@
+{
+  "name": "nodejs-console-app1",
+  "version": "0.0.0",
+  "description": "NodejsConsoleApp1",
+  "main": "app.js",
+  "devDependencies": {
+    "express": "4.15.3",
+    "body-parser": "1.17.2"
+      
+  },
+  "author": {
+    "name": "babak"
+  }
+}

@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title></title>
+    <script src="jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("body").on('change', '#txtFile', function () {
+                var file = $("#txtFile")[0].files[0];
+                $("#txtKey").val(file.name);
+                $("#txtContent").val(file.type);
+
+            });
+
+            $("#btnTest").click(function () {
+                var file = $("#txtFile")[0].files[0];
+
+                var bucketName = $("#txtBucket").val();
+                var acl = $("#txtAcl").val();
+
+                var config = {
+                    bucket: bucketName,
+                    filename: file.name,
+                    fileContent: file.type,
+                    region: "us-east-1"
+                }
+
+                $.ajax({
+                    url: '/get_credential',
+                    type: 'POST',
+                    datatype: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify(config),
+                    success: function (data) {
+                        //alert(data);
+                        $("#txtAccessKey").val(data.params.AccessKey);
+                        $("#txtPolicy").val(data.params.Policy);
+                        $("#txtSigniture").val(data.params.Signiture);
+                        $("form").attr("action", "http://s3.amazonaws.com/" + bucketName)
+                        //$("form").submit();
+                    }
+                });
+            });
+        })
+    </script>
+</head>
+<body>
+
+    <br />
+    Bucket Name : <input id="txtBucket" type="text" />
+    <br />
+    <input type="button" id="btnTest" value="Set!"/>
+    <br />
+    <h2>Acembly S3 Native Upload Portotype!!!</h2>
+    <br />
+    <!--Bucket Name:<input type="text" id="txtBucket" name="bucket"  />-->
+    <form action="" method="post" enctype="multipart/form-data">
+        <input type="text" id="txtKey" name="key" />
+        <input type="text" id="txtAcl" name="acl" value="public-read" />
+        <input type="text" id="txtContent" name="content-type"  />
+        <input type="hidden" id="txtAccessKey" name="AWSAccessKeyId"  />
+        <input type="hidden" id="txtPolicy" name="policy"  />
+        <input type="hidden" id="txtSigniture" name="signature" />
+        <input name="file" id="txtFile" type="file" />
+        <input name="submit" value="Upload" type="submit" />
+    </form>
+</body>
+</html>
